@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анкети Героїв Dota 2 - Створення та Редагування</title>
+    <!-- Завантаження Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Налаштування шрифту Inter -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; /* Темний фон */
+        }
+        /* Стиль для editable полів */
+        [contenteditable]:focus {
+            outline: 2px solid #5758ff; /* Яскрава рамка при фокусі */
+            background-color: #1a202c;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <header class="text-center mb-10">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-[#e0e0e0] mb-2">База Анкет Героїв Dota 2</h1>
+        <p class="text-lg text-[#94a3b8]">Налаштуйте та заповніть детальні профілі своїх улюблених героїв.</p>
+    </header>
+
+    <!-- Головна сітка для карток. 3 у ряд на великих екранах. Адаптивна! -->
+    <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        <!-- Шаблон Картки Героя (Копіюється тричі) -->
+        <template id="hero-card-template">
+            <div class="bg-[#1f2937] p-6 rounded-xl shadow-2xl border-2 border-transparent hover:border-[#5758ff] transition duration-300">
+                
+                <!-- Заголовок та Зображення -->
+                <div class="flex flex-col items-center mb-6">
+                    <div class="w-20 h-20 bg-[#374151] rounded-full flex items-center justify-center text-4xl text-[#ffc840] mb-3">
+                        <!-- Іконка-плейсхолдер (можна замінити на іконку героя) -->
+                        🛡️
+                    </div>
+                    <h2 contenteditable="true" class="text-3xl font-bold text-[#f3f4f6] text-center w-full p-2 rounded-lg transition duration-150" data-placeholder="Ім'я Героя (натисніть, щоб змінити)">
+                        Назва Героя
+                    </h2>
+                    <p contenteditable="true" class="text-md text-[#9ca3af] mt-1 w-full text-center p-1 rounded-lg" data-placeholder="Основна Роль">
+                        Керрі / Складність: 3/3
+                    </p>
+                </div>
+
+                <!-- Детальні Атрибути та Статистика -->
+                <div class="space-y-3 mb-6">
+
+                    <!-- Карусель Зображень Героя (Скіни/Арти) -->
+                    <div class="carousel-container relative overflow-hidden rounded-lg mb-4 shadow-md">
+                        <div class="carousel-track flex w-full transition-transform duration-300 ease-in-out">
+                            <!-- 5 Placeholder Images for Skins/Arts (мінімум 5, як ви просили) -->
+                            <img src="https://placehold.co/400x200/4f5b66/ffffff?text=Скін+1" class="carousel-slide w-full flex-shrink-0 h-40 object-cover" alt="Скін Героя 1" />
+                            <img src="https://placehold.co/400x200/5d6b7a/ffffff?text=Скін+2" class="carousel-slide w-full flex-shrink-0 h-40 object-cover" alt="Скін Героя 2" />
+                            <img src="https://placehold.co/400x200/6b798b/ffffff?text=Скін+3" class="carousel-slide w-full flex-shrink-0 h-40 object-cover" alt="Скін Героя 3" />
+                            <img src="https://placehold.co/400x200/7a879a/ffffff?text=Скін+4" class="carousel-slide w-full flex-shrink-0 h-40 object-cover" alt="Скін Героя 4" />
+                            <img src="https://placehold.co/400x200/8c9ab8/ffffff?text=Скін+5" class="carousel-slide w-full flex-shrink-0 h-40 object-cover" alt="Скін Героя 5" />
+                        </div>
+                        
+                        <!-- Кнопки Навігації -->
+                        <button class="carousel-prev absolute top-1/2 left-2 transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white text-xl p-1 rounded-full z-10 transition h-8 w-8 flex items-center justify-center opacity-75 hover:opacity-100">
+                            &lt;
+                        </button>
+                        <button class="carousel-next absolute top-1/2 right-2 transform -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white text-xl p-1 rounded-full z-10 transition h-8 w-8 flex items-center justify-center opacity-75 hover:opacity-100">
+                            &gt;
+                        </button>
+                    </div>
+                    <!-- Кінець Каруселі -->
+
+                    <h3 class="text-xl font-semibold text-[#5758ff] border-b border-[#374151] pb-1 mb-3">Атрибути</h3>
+                    <div class="flex justify-between text-[#d1d5db]">
+                        <span class="font-medium">Сила (STR):</span>
+                        <span contenteditable="true" class="text-[#ff5c5c] font-bold p-0.5 rounded-md" data-placeholder="30+3.4">24 + 2.8</span>
+                    </div>
+                    <div class="flex justify-between text-[#d1d5db]">
+                        <span class="font-medium">Спритність (AGI):</span>
+                        <span contenteditable="true" class="text-[#8aff8a] font-bold p-0.5 rounded-md" data-placeholder="25+2.5">32 + 3.8</span>
+                    </div>
+                    <div class="flex justify-between text-[#d1d5db]">
+                        <span class="font-medium">Інтелект (INT):</span>
+                        <span contenteditable="true" class="text-[#5c5cff] font-bold p-0.5 rounded-md" data-placeholder="18+1.6">15 + 1.2</span>
+                    </div>
+                    <div class="pt-3">
+                        <label class="block text-sm font-medium text-[#9ca3af] mb-1">Опис / Основна Механіка:</label>
+                        <textarea contenteditable="true" rows="3" class="w-full bg-[#1a202c] text-[#f3f4f6] p-2 rounded-lg text-sm transition duration-150 border border-transparent focus:border-[#5758ff]" data-placeholder="Опишіть, як грати цим героєм та його ключові особливості.">
+Герой, що орієнтований на пізню гру. Потребує багато золота та досвіду для реалізації свого потенціалу. Головна здібність — втеча та нанесення чистої шкоди.
+                        </textarea>
+                    </div>
+                </div>
+
+                <!-- Відео (Youtube/Twitch) -->
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold text-[#5758ff] border-b border-[#374151] pb-1 mb-3">Відео Огляд / Реплей</h3>
+                    <label for="video-input" class="block text-sm font-medium text-[#9ca3af] mb-1">Посилання на Відео (YouTube Embed):</label>
+                    <!-- Просто текстове поле, куди можна вставити код вбудовування або посилання -->
+                    <textarea contenteditable="true" rows="2" class="video-input w-full bg-[#1a202c] text-[#f3f4f6] p-2 rounded-lg text-sm" data-placeholder="Вставте URL відео з YouTube (наприклад, гайд або найкращий момент).">
+https://youtu.be/example_video_id
+                    </textarea>
+                    
+                    <div class="mt-3 video-embed-placeholder bg-[#374151] h-32 flex items-center justify-center text-[#9ca3af] rounded-lg text-sm overflow-hidden">
+                        <!-- Тут з'явиться вбудоване відео або його плейсхолдер -->
+                        Плейсхолдер для Відео (вставте URL вище)
+                    </div>
+                </div>
+
+                <!-- Топ Сети та Предмети -->
+                <div>
+                    <h3 class="text-xl font-semibold text-[#5758ff] border-b border-[#374151] pb-1 mb-3">Топ Сети та Збірки</h3>
+                    <label class="block text-sm font-medium text-[#9ca3af] mb-1">Ключові предмети / косметичні сети:</label>
+                    <textarea contenteditable="true" rows="4" class="w-full bg-[#1a202c] text-[#f3f4f6] p-2 rounded-lg text-sm" data-placeholder="Введіть топові предмети (Manta, Skadi) або назву косметичного сету.">
+1. Battle Fury
+2. Manta Style
+3. Eye of Skadi
+4. Set: 'Immortal Conqueror'
+                    </textarea>
+                </div>
+            </div>
+        </template>
+        <!-- Кінець Шаблону Картки Героя -->
+
+    </main>
+
+    <script>
+        // Функція для налаштування логіки каруселі
+        function setupCarousel(card) {
+            const track = card.querySelector('.carousel-track');
+            const slides = card.querySelectorAll('.carousel-slide');
+            const prevButton = card.querySelector('.carousel-prev');
+            const nextButton = card.querySelector('.carousel-next');
+
+            if (!track || slides.length === 0) return;
+
+            let currentSlide = 0;
+            const totalSlides = slides.length;
+
+            function updateCarousel() {
+                // Зсув треку: -100% для другого слайда, -200% для третього і т.д.
+                const offset = -currentSlide * 100;
+                track.style.transform = `translateX(${offset}%)`;
+            }
+
+            prevButton.addEventListener('click', () => {
+                // Циклічний перехід назад
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                updateCarousel();
+            });
+
+            nextButton.addEventListener('click', () => {
+                // Циклічний перехід вперед
+                currentSlide = (currentSlide + 1) % totalSlides;
+                updateCarousel();
+            });
+        }
+        
+        // Функція для створення iframe з URL YouTube
+        function updateVideoEmbed(cardElement, url) {
+            const placeholder = cardElement.querySelector('.video-embed-placeholder');
+            
+            // Очищення попереднього контенту
+            placeholder.innerHTML = '';
+            
+            // Регулярний вираз для отримання ID відео з різних форматів YouTube URL
+            const youtubeRegex = /(?:youtu\.be\/|youtube\.com\/(?:watch\?.*v=|embed\/|v\/|shorts\/))([\w-]{11})/;
+            const match = url.match(youtubeRegex);
+
+            if (match && match[1]) {
+                const videoId = match[1];
+                const iframe = document.createElement('iframe');
+                iframe.setAttribute('src', `https://www.youtube.com/embed/${videoId}`);
+                iframe.setAttribute('frameborder', '0');
+                iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+                iframe.setAttribute('allowfullscreen', 'true');
+                iframe.classList.add('w-full', 'h-full');
+                // Видаляємо класи, які центруюють текст, і додаємо клас для співвідношення сторін 16:9
+                placeholder.classList.remove('h-32', 'flex', 'items-center', 'justify-center', 'text-[#9ca3af]');
+                placeholder.classList.add('aspect-video');
+                placeholder.appendChild(iframe);
+            } else {
+                // Якщо URL не дійсний або порожній, показуємо плейсхолдер
+                placeholder.innerHTML = 'Плейсхолдер для Відео (вставте URL вище)';
+                placeholder.classList.add('h-32', 'flex', 'items-center', 'justify-center', 'text-[#9ca3af]');
+                placeholder.classList.remove('aspect-video');
+            }
+        }
+        
+        // Функція для створення карток з шаблону та ініціалізації
+        function initializeHeroCards() {
+            const mainContainer = document.querySelector('main');
+            const template = document.getElementById('hero-card-template');
+
+            // Кількість карток, які потрібно згенерувати (за вимогою - 3)
+            const numberOfCards = 3;
+
+            for (let i = 0; i < numberOfCards; i++) {
+                const cardClone = template.content.cloneNode(true);
+                const cardDiv = cardClone.querySelector('div');
+
+                // Додавання унікальних ідентифікаторів/початкового тексту
+                const heroNameElement = cardDiv.querySelector('h2');
+                const roleElement = cardDiv.querySelector('p[contenteditable="true"]');
+                const videoInput = cardDiv.querySelector('.video-input');
+                
+                heroNameElement.textContent = `Герой №${i + 1}`;
+                roleElement.textContent = `Роль №${i + 1}`;
+
+                // Налаштування каруселі для цієї картки
+                setupCarousel(cardDiv);
+
+                // Додавання слухача подій для оновлення відео-плейсхолдера
+                videoInput.addEventListener('input', () => {
+                    updateVideoEmbed(cardDiv, videoInput.textContent.trim());
+                });
+
+                // Виклик функції для первинного завантаження
+                updateVideoEmbed(cardDiv, videoInput.textContent.trim());
+
+                mainContainer.appendChild(cardDiv);
+            }
+
+             // Ініціалізація плейсхолдерів для textarea та інших contenteditable
+            document.querySelectorAll('[contenteditable]').forEach(el => {
+                const placeholder = el.getAttribute('data-placeholder');
+                if (placeholder && el.textContent.trim() === '') {
+                    el.textContent = placeholder;
+                    el.style.color = '#718096'; // Сірий колір для плейсхолдера
+                }
+
+                el.addEventListener('focus', () => {
+                    if (el.textContent === placeholder) {
+                        el.textContent = '';
+                        el.style.color = ''; // Повернути основний колір тексту
+                    }
+                });
+
+                el.addEventListener('blur', () => {
+                    if (el.textContent.trim() === '') {
+                        el.textContent = placeholder;
+                        el.style.color = '#718096';
+                    }
+                });
+            });
+        }
+
+        // Запуск ініціалізації при завантаженні сторінки
+        window.onload = initializeHeroCards;
+    </script>
+</body>
+</html>
